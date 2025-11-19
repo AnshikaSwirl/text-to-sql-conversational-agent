@@ -1,0 +1,4 @@
+[build]
+builder = "python"
+python_version = "3.10"
+requirements_path = "backend/requirements.txt"
