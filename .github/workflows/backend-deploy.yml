@@ -15,14 +15,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install dependencies only from backend folder
       - name: Install backend dependencies
         working-directory: ./backend
         run: |
           python3 -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Zip the backend folder for deployment
       - name: Zip backend
         run: |
           cd backend
@@ -45,15 +43,9 @@ jobs:
         with:
           name: backend-package
 
-      # Login with publish profile (BEST & EASIEST for Azure Web App)
-      - name: Azure Login via Publish Profile
-        uses: azure/login@v1
+      - name: Deploy to Azure Web App using Publish Profile
+        uses: azure/webapps-deploy@v2
         with:
+          app-name: "text2sql-backend-anshika"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-
-      # Deploy backend.zip to Azure Web App
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: "text2sql-backend-anshika"   # <-- your backend app name
           package: backend.zip
