@@ -2,29 +2,23 @@ name: Deploy Backend to Azure Web App
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Install Python dependencies from backend
       - name: Install backend dependencies
         run: |
           python3 -m pip install --upgrade pip
           pip install -r backend/requirements.txt
 
-      # ZIP backend folder INCLUDING the folder name
       - name: Zip backend folder
-        run: |
-          zip -r backend.zip backend
+        run: zip -r backend.zip backend
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -32,26 +26,20 @@ jobs:
           name: backend-package
           path: backend.zip
 
-
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Download package artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-package
 
-      # Login using PUBLISH PROFILE
-      - name: Azure Login via Publish Profile
-        uses: azure/login@v1
-        with:
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-
-      # Deploy to Azure WebApp
+      # ONLY THIS step — handles login + deploy
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: "text2sql-backend-anshika"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: backend.zip
