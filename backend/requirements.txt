@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+sqlalchemy
+pyodbc
+openai
+langgraph
+python-multipart
+requests
