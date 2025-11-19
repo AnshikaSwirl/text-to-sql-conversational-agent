@@ -1,9 +1,9 @@
 fastapi
 uvicorn
+gunicorn
+pydantic
 pandas
 sqlalchemy
 pyodbc
 openai
 langgraph
-python-multipart
-requests
